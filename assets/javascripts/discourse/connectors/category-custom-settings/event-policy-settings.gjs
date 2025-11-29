@@ -1,47 +1,45 @@
-import Component from "@glimmer/component";
+/* eslint-disable ember/no-classic-components */
+import Component from "@ember/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class EventPolicySettings extends Component {
-  @service siteSettings;
-
-  policyOptions = [
-    { id: "allow", name: i18n("discourse_event_policy.policy_options.allow") },
-    {
-      id: "require",
-      name: i18n("discourse_event_policy.policy_options.require"),
-    },
-    {
-      id: "disallow",
-      name: i18n("discourse_event_policy.policy_options.disallow"),
-    },
-  ];
+  get policyOptions() {
+    return [
+      {
+        id: "allow",
+        name: i18n("discourse_event_policy.policy_options.allow"),
+      },
+      {
+        id: "require",
+        name: i18n("discourse_event_policy.policy_options.require"),
+      },
+      {
+        id: "disallow",
+        name: i18n("discourse_event_policy.policy_options.disallow"),
+      },
+    ];
+  }
 
   get firstPostPolicy() {
-    return (
-      this.args.outletArgs.category.custom_fields?.event_policy_first_post ||
-      "allow"
-    );
+    return this.category?.custom_fields?.event_policy_first_post || "allow";
   }
 
   get replyPostsPolicy() {
-    return (
-      this.args.outletArgs.category.custom_fields?.event_policy_reply_posts ||
-      "allow"
-    );
+    return this.category?.custom_fields?.event_policy_reply_posts || "allow";
   }
 
   @action
   onChangeFirstPostPolicy(value) {
-    this.args.outletArgs.category.custom_fields.event_policy_first_post = value;
+    this.category.custom_fields.event_policy_first_post = value;
   }
 
   @action
   onChangeReplyPostsPolicy(value) {
-    this.args.outletArgs.category.custom_fields.event_policy_reply_posts =
-      value;
+    this.category.custom_fields.event_policy_reply_posts = value;
   }
 
   <template>
