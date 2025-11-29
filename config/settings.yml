@@ -1,0 +1,23 @@
+discourse_event_policy:
+  enabled:
+    default: true
+    client: true
+    # description moved to locales/server.en.yml
+
+  default_topic_policy:
+    default: "allow"
+    client: true
+    # description moved to locales/server.en.yml
+    choices:
+      - allow
+      - require
+      - disallow
+
+  default_reply_policy:
+    default: "allow"
+    client: true
+    # description moved to locales/server.en.yml
+    choices:
+      - allow
+      - require
+      - disallow
