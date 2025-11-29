@@ -8,10 +8,12 @@ import { i18n } from "discourse-i18n";
 /**
  * @component EventPolicySettings
  * Category settings connector for configuring event policies
- *
- * @param {Object} outletArgs.category - The category being edited
  */
 export default class EventPolicySettings extends Component {
+  static shouldRender(args, { siteSettings }) {
+    return siteSettings.event_policy_enabled;
+  }
+
   get category() {
     return this.args.outletArgs.category;
   }
@@ -36,62 +38,56 @@ export default class EventPolicySettings extends Component {
   }
 
   <template>
-    {{#if @outletArgs.siteSettings.event_policy_enabled}}
-      <section class="field event-policy-settings">
-        <h3>{{i18n "event_policy.category.settings_section"}}</h3>
+    <section class="field event-policy-settings">
+      <h3>{{i18n "event_policy.category.settings_section"}}</h3>
 
-        <section class="field">
-          <label>{{i18n
-              "event_policy.category.event_policy_first_post"
-            }}</label>
-          <select
-            {{on
-              "change"
-              (withEventValue
-                (fn (mut this.category.custom_fields.event_policy_first_post))
-              )
-            }}
-          >
-            {{#each this.policyOptions as |policyOption|}}
-              <option
-                value={{policyOption.value}}
-                selected={{eq this.firstPostPolicy policyOption.value}}
-              >
-                {{policyOption.name}}
-              </option>
-            {{/each}}
-          </select>
-          <div class="setting-help">{{i18n
-              "event_policy.category.event_policy_first_post_help"
-            }}</div>
-        </section>
-
-        <section class="field">
-          <label>{{i18n
-              "event_policy.category.event_policy_reply_posts"
-            }}</label>
-          <select
-            {{on
-              "change"
-              (withEventValue
-                (fn (mut this.category.custom_fields.event_policy_reply_posts))
-              )
-            }}
-          >
-            {{#each this.policyOptions as |policyOption|}}
-              <option
-                value={{policyOption.value}}
-                selected={{eq this.replyPostsPolicy policyOption.value}}
-              >
-                {{policyOption.name}}
-              </option>
-            {{/each}}
-          </select>
-          <div class="setting-help">{{i18n
-              "event_policy.category.event_policy_reply_posts_help"
-            }}</div>
-        </section>
+      <section class="field">
+        <label>{{i18n "event_policy.category.event_policy_first_post"}}</label>
+        <select
+          {{on
+            "change"
+            (withEventValue
+              (fn (mut this.category.custom_fields.event_policy_first_post))
+            )
+          }}
+        >
+          {{#each this.policyOptions as |policyOption|}}
+            <option
+              value={{policyOption.value}}
+              selected={{eq this.firstPostPolicy policyOption.value}}
+            >
+              {{policyOption.name}}
+            </option>
+          {{/each}}
+        </select>
+        <div class="setting-help">{{i18n
+            "event_policy.category.event_policy_first_post_help"
+          }}</div>
       </section>
-    {{/if}}
+
+      <section class="field">
+        <label>{{i18n "event_policy.category.event_policy_reply_posts"}}</label>
+        <select
+          {{on
+            "change"
+            (withEventValue
+              (fn (mut this.category.custom_fields.event_policy_reply_posts))
+            )
+          }}
+        >
+          {{#each this.policyOptions as |policyOption|}}
+            <option
+              value={{policyOption.value}}
+              selected={{eq this.replyPostsPolicy policyOption.value}}
+            >
+              {{policyOption.name}}
+            </option>
+          {{/each}}
+        </select>
+        <div class="setting-help">{{i18n
+            "event_policy.category.event_policy_reply_posts_help"
+          }}</div>
+      </section>
+    </section>
   </template>
 }
