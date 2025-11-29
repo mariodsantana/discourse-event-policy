@@ -16,12 +16,12 @@ after_initialize do
     end
   end
 
-  # expose group custom fields via serializer so the client can render controls
-  add_to_serializer(:group, :events_policy_topic) do
+  # expose group custom fields via the GroupShowSerializer so the client can render controls
+  add_to_serializer(:group_show, :events_policy_topic) do
     object.custom_fields["events_policy_topic"] || SiteSetting.discourse_event_policy_default_topic_policy
   end
 
-  add_to_serializer(:group, :events_policy_reply) do
+  add_to_serializer(:group_show, :events_policy_reply) do
     object.custom_fields["events_policy_reply"] || SiteSetting.discourse_event_policy_default_reply_policy
   end
 
