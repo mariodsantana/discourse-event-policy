@@ -1,74 +1,95 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
-import ComboBox from "discourse/select-kit/components/combo-box";
+import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import withEventValue from "discourse/helpers/with-event-value";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
+/**
+ * @component EventPolicySettings
+ * Category settings connector for configuring event policies
+ *
+ * @param {Object} outletArgs.category - The category being edited
+ */
 export default class EventPolicySettings extends Component {
+  get category() {
+    return this.args.outletArgs.category;
+  }
+
   get policyOptions() {
     return [
+      { value: "allow", name: i18n("event_policy.policy_options.allow") },
+      { value: "require", name: i18n("event_policy.policy_options.require") },
       {
-        id: "allow",
-        name: i18n("discourse_event_policy.policy_options.allow"),
-      },
-      {
-        id: "require",
-        name: i18n("discourse_event_policy.policy_options.require"),
-      },
-      {
-        id: "disallow",
-        name: i18n("discourse_event_policy.policy_options.disallow"),
+        value: "disallow",
+        name: i18n("event_policy.policy_options.disallow"),
       },
     ];
   }
 
   get firstPostPolicy() {
-    return this.category?.custom_fields?.event_policy_first_post || "allow";
+    return this.category.custom_fields?.event_policy_first_post || "allow";
   }
 
   get replyPostsPolicy() {
-    return this.category?.custom_fields?.event_policy_reply_posts || "allow";
-  }
-
-  @action
-  onChangeFirstPostPolicy(value) {
-    this.category.custom_fields.event_policy_first_post = value;
-  }
-
-  @action
-  onChangeReplyPostsPolicy(value) {
-    this.category.custom_fields.event_policy_reply_posts = value;
+    return this.category.custom_fields?.event_policy_reply_posts || "allow";
   }
 
   <template>
-    {{#if this.siteSettings.event_policy_enabled}}
+    {{#if @outletArgs.siteSettings.event_policy_enabled}}
       <section class="field event-policy-settings">
-        <h3>{{i18n "discourse_event_policy.category.settings_section"}}</h3>
+        <h3>{{i18n "event_policy.category.settings_section"}}</h3>
 
         <section class="field">
-          <label>
-            {{i18n "discourse_event_policy.category.event_policy_first_post"}}
-          </label>
-          <ComboBox
-            @value={{this.firstPostPolicy}}
-            @content={{this.policyOptions}}
-            @onChange={{this.onChangeFirstPostPolicy}}
-            class="event-policy-first-post-select"
-          />
+          <label>{{i18n
+              "event_policy.category.event_policy_first_post"
+            }}</label>
+          <select
+            {{on
+              "change"
+              (withEventValue
+                (fn (mut this.category.custom_fields.event_policy_first_post))
+              )
+            }}
+          >
+            {{#each this.policyOptions as |policyOption|}}
+              <option
+                value={{policyOption.value}}
+                selected={{eq this.firstPostPolicy policyOption.value}}
+              >
+                {{policyOption.name}}
+              </option>
+            {{/each}}
+          </select>
+          <div class="setting-help">{{i18n
+              "event_policy.category.event_policy_first_post_help"
+            }}</div>
         </section>
 
         <section class="field">
-          <label>
-            {{i18n "discourse_event_policy.category.event_policy_reply_posts"}}
-          </label>
-          <ComboBox
-            @value={{this.replyPostsPolicy}}
-            @content={{this.policyOptions}}
-            @onChange={{this.onChangeReplyPostsPolicy}}
-            class="event-policy-reply-posts-select"
-          />
+          <label>{{i18n
+              "event_policy.category.event_policy_reply_posts"
+            }}</label>
+          <select
+            {{on
+              "change"
+              (withEventValue
+                (fn (mut this.category.custom_fields.event_policy_reply_posts))
+              )
+            }}
+          >
+            {{#each this.policyOptions as |policyOption|}}
+              <option
+                value={{policyOption.value}}
+                selected={{eq this.replyPostsPolicy policyOption.value}}
+              >
+                {{policyOption.name}}
+              </option>
+            {{/each}}
+          </select>
+          <div class="setting-help">{{i18n
+              "event_policy.category.event_policy_reply_posts_help"
+            }}</div>
         </section>
       </section>
     {{/if}}

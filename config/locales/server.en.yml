@@ -1,9 +1,7 @@
 en:
   site_settings:
-    event_policy_enabled: "Enable the event policy plugin to control event creation per category"
-  discourse_event_policy:
+    event_policy_enabled: "Enable event policy enforcement for categories"
+  event_policy:
     errors:
-      first_post_events_not_allowed: "Events are not allowed in the first post of this category."
-      first_post_event_required: "An event is required in the first post of this category."
-      reply_post_events_not_allowed: "Events are not allowed in reply posts of this category."
-      reply_post_event_required: "An event is required in reply posts of this category."
+      event_required: "This category requires posts to include an event. Please add an event using [event] syntax."
+      event_not_allowed: "Events are not allowed in this category. Please remove the event from your post."
