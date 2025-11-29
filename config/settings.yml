@@ -2,3 +2,4 @@ event_policy_enabled:
   default: true
   type: bool
   category: plugins
+  client: true
