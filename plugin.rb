@@ -2,8 +2,8 @@
 
 # name: discourse-event-policy
 # about: Controls event creation policies per category for the discourse-calendar plugin
-# version: 1.0.0
-# authors: Discourse Team
+# version: 0.1
+# authors: Mario Santana
 # url: https://github.com/discourse/discourse-event-policy
 
 enabled_site_setting :event_policy_enabled
