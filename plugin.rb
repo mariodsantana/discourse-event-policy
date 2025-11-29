@@ -18,18 +18,12 @@ after_initialize do
   # Register category custom fields
   reloadable_patch do
     Category.register_custom_field_type("event_policy_first_post", :string)
-    Category.register_custom_field_type("event_policy_reply_posts", :string)
     register_preloaded_category_custom_fields("event_policy_first_post")
-    register_preloaded_category_custom_fields("event_policy_reply_posts")
   end
 
   # Add category custom fields to serializer
   add_to_serializer :basic_category, :event_policy_first_post do
     object.custom_fields["event_policy_first_post"]
-  end
-
-  add_to_serializer :basic_category, :event_policy_reply_posts do
-    object.custom_fields["event_policy_reply_posts"]
   end
 
   # Validate posts based on event policy

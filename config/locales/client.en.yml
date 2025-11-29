@@ -3,10 +3,8 @@ en:
     event_policy:
       category:
         settings_section: "Event Policy"
-        event_policy_first_post: "Event Policy - First Post"
-        event_policy_first_post_help: "Controls whether events are allowed/required/disallowed in topic opening posts"
-        event_policy_reply_posts: "Event Policy - Reply Posts"
-        event_policy_reply_posts_help: "Controls whether events are allowed/required/disallowed in reply posts"
+        event_policy_first_post: "Event Policy"
+        event_policy_first_post_help: "Controls whether events are allowed, required, or disallowed in topic opening posts"
       policy_options:
         allow: "Allow (optional)"
         require: "Require (mandatory)"

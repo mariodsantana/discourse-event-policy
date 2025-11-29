@@ -40,7 +40,7 @@ RSpec.describe DiscourseEventPolicy::EventPolicyValidator do
         category.save!
       end
 
-      it "allows posts with events" do
+      it "allows first posts with events" do
         topic = Fabricate(:topic, category: category)
         post = Fabricate.build(:post, user: user, topic: topic, raw: "[event start=\"2025-12-01\"]")
         validator = described_class.new(post)
@@ -49,13 +49,23 @@ RSpec.describe DiscourseEventPolicy::EventPolicyValidator do
         expect(post.errors).to be_empty
       end
 
-      it "rejects posts without events" do
+      it "rejects first posts without events" do
         topic = Fabricate(:topic, category: category)
         post = Fabricate.build(:post, user: user, topic: topic, raw: "Just a regular post")
         validator = described_class.new(post)
 
         expect(validator.validate_event_policy).to eq(false)
         expect(post.errors[:base]).to include(I18n.t("event_policy.errors.event_required"))
+      end
+
+      it "does not apply to reply posts" do
+        topic = Fabricate(:topic, category: category)
+        Fabricate(:post, topic: topic)
+        reply = Fabricate.build(:post, user: user, topic: topic, raw: "Reply without event")
+        validator = described_class.new(reply)
+
+        expect(validator.validate_event_policy).to eq(true)
+        expect(reply.errors).to be_empty
       end
     end
 
@@ -65,7 +75,7 @@ RSpec.describe DiscourseEventPolicy::EventPolicyValidator do
         category.save!
       end
 
-      it "allows posts without events" do
+      it "allows first posts without events" do
         topic = Fabricate(:topic, category: category)
         post = Fabricate.build(:post, user: user, topic: topic, raw: "Just a regular post")
         validator = described_class.new(post)
@@ -74,7 +84,7 @@ RSpec.describe DiscourseEventPolicy::EventPolicyValidator do
         expect(post.errors).to be_empty
       end
 
-      it "rejects posts with events" do
+      it "rejects first posts with events" do
         topic = Fabricate(:topic, category: category)
         post = Fabricate.build(:post, user: user, topic: topic, raw: "[event start=\"2025-12-01\"]")
         validator = described_class.new(post)
@@ -82,61 +92,16 @@ RSpec.describe DiscourseEventPolicy::EventPolicyValidator do
         expect(validator.validate_event_policy).to eq(false)
         expect(post.errors[:base]).to include(I18n.t("event_policy.errors.event_not_allowed"))
       end
-    end
 
-    context "when different policies are set for first post and reply posts" do
-      before do
-        category.custom_fields["event_policy_first_post"] = "require"
-        category.custom_fields["event_policy_reply_posts"] = "disallow"
-        category.save!
-      end
-
-      it "enforces first post policy on first post (post_number = 1)" do
-        topic = Fabricate(:topic, category: category)
-        post =
-          Fabricate.build(:post, user: user, topic: topic, post_number: 1, raw: "No event here")
-        validator = described_class.new(post)
-
-        expect(validator.validate_event_policy).to eq(false)
-        expect(post.errors[:base]).to include(I18n.t("event_policy.errors.event_required"))
-      end
-
-      it "enforces first post policy on new topic (post_number nil, posts_count = 0)" do
-        topic = Fabricate(:topic, category: category)
-        topic.update_column(:posts_count, 0)
-        post = Fabricate.build(:post, user: user, topic: topic, raw: "No event here")
-
-        validator = described_class.new(post)
-
-        expect(validator.validate_event_policy).to eq(false)
-        expect(post.errors[:base]).to include(I18n.t("event_policy.errors.event_required"))
-      end
-
-      it "enforces reply post policy on reply posts" do
-        topic = Fabricate(:topic, category: category)
-        post =
-          Fabricate.build(
-            :post,
-            user: user,
-            topic: topic,
-            post_number: 2,
-            raw: "[event start=\"2025-12-01\"]",
-          )
-        validator = described_class.new(post)
-
-        expect(validator.validate_event_policy).to eq(false)
-        expect(post.errors[:base]).to include(I18n.t("event_policy.errors.event_not_allowed"))
-      end
-
-      it "enforces reply post policy on new reply (post_number nil, posts_count > 0)" do
+      it "does not apply to reply posts" do
         topic = Fabricate(:topic, category: category)
         Fabricate(:post, topic: topic)
-        post = Fabricate.build(:post, user: user, topic: topic, raw: "[event start=\"2025-12-01\"]")
+        reply =
+          Fabricate.build(:post, user: user, topic: topic, raw: "[event start=\"2025-12-01\"]")
+        validator = described_class.new(reply)
 
-        validator = described_class.new(post)
-
-        expect(validator.validate_event_policy).to eq(false)
-        expect(post.errors[:base]).to include(I18n.t("event_policy.errors.event_not_allowed"))
+        expect(validator.validate_event_policy).to eq(true)
+        expect(reply.errors).to be_empty
       end
     end
 

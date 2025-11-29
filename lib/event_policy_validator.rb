@@ -47,19 +47,16 @@ module DiscourseEventPolicy
 
     private
 
-    # Gets the appropriate policy for the post based on whether it's a first post or reply
+    # Gets the event policy for the post's category
+    # Only applies to first posts (topic openers) since discourse-calendar
+    # already disallows events in reply posts
     #
     # @param category [Category] the category to check
     # @returns [String, nil] the policy string or nil
     def get_policy_for_post(category)
-      is_first_post = first_post?
+      return nil unless first_post?
 
-      policy =
-        if is_first_post
-          category.custom_fields["event_policy_first_post"]
-        else
-          category.custom_fields["event_policy_reply_posts"]
-        end
+      policy = category.custom_fields["event_policy_first_post"]
 
       # Only return policy if it's set to something other than "allow" (the default)
       policy if policy.present? && policy != POLICY_ALLOW

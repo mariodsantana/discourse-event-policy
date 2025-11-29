@@ -33,10 +33,6 @@ export default class EventPolicySettings extends Component {
     return this.category.custom_fields?.event_policy_first_post || "allow";
   }
 
-  get replyPostsPolicy() {
-    return this.category.custom_fields?.event_policy_reply_posts || "allow";
-  }
-
   <template>
     <section class="field event-policy-settings">
       <h3>{{i18n "event_policy.category.settings_section"}}</h3>
@@ -62,30 +58,6 @@ export default class EventPolicySettings extends Component {
         </select>
         <div class="setting-help">{{i18n
             "event_policy.category.event_policy_first_post_help"
-          }}</div>
-      </section>
-
-      <section class="field">
-        <label>{{i18n "event_policy.category.event_policy_reply_posts"}}</label>
-        <select
-          {{on
-            "change"
-            (withEventValue
-              (fn (mut this.category.custom_fields.event_policy_reply_posts))
-            )
-          }}
-        >
-          {{#each this.policyOptions as |policyOption|}}
-            <option
-              value={{policyOption.value}}
-              selected={{eq this.replyPostsPolicy policyOption.value}}
-            >
-              {{policyOption.name}}
-            </option>
-          {{/each}}
-        </select>
-        <div class="setting-help">{{i18n
-            "event_policy.category.event_policy_reply_posts_help"
           }}</div>
       </section>
     </section>
