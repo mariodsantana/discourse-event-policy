@@ -1,10 +1,3 @@
 en:
-  discourse_event_policy:
-    errors:
-      disallowed_event: "Events are not allowed for your group in %{context} posts."
-      missing_event: "This %{context} must include an event."
-
   site_settings:
-    discourse_event_policy_enabled: "Enable the Discourse Event Policy plugin"
-    discourse_event_policy_default_topic_policy: "Default policy for topic (first) posts: allow, require, or disallow"
-    discourse_event_policy_default_reply_policy: "Default policy for reply posts: allow, require, or disallow"
+    event_policy_enabled: "Enable the event policy plugin to control event creation per category"

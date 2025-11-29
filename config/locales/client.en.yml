@@ -1,0 +1,11 @@
+en:
+  js:
+    discourse_event_policy:
+      category:
+        event_policy_first_post: "Event Policy - First Post"
+        event_policy_reply_posts: "Event Policy - Reply Posts"
+        settings_sections:
+          event_policy: "Event Policy"
+      errors:
+        first_post_events_not_allowed: "Events are not allowed in the first post of this category."
+        reply_post_events_not_allowed: "Events are not allowed in reply posts of this category."

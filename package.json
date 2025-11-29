@@ -1,0 +1,7 @@
+{
+  "name": "discourse-event-policy",
+  "version": "0.1.0",
+  "description": "Control event creation policies per category for discourse-calendar",
+  "author": "Discourse",
+  "license": "GPL-2.0-or-later"
+}
